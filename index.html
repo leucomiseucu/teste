@@ -1,0 +1,938 @@
+
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>errorxz</title>
+    <meta content="errorxz" property="og:title"/>
+    <meta content="Clique, assista, aproveite. O 15M derruba o paywall, garantindo que conteúdo de qualidade seja acessível a todos." property="og:description"/>
+    <meta content="" property="og:url"/>
+    <meta content="coloque o logo aqui" property="og:image"/>
+    <meta content="#A17FC0" data-react-helmet="true" name="theme-color"/>
+    <meta property="twitter:card" content="summary">
+    <meta property="twitter:url" content="">
+    <meta property="twitter:title" content="Assista a Filmes e Séries">
+    <meta property="twitter:description" content="Clique, assista, aproveite. O 15M derruba o paywall, garantindo que conteúdo de qualidade seja acessível a todos.">
+    <meta property="twitter:image" content="">
+    <link rel="icon" type="image/x-icon" href="">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.10.3/cdn.min.js" defer></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="sources.js"></script>
+    </script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+    <style>
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        @keyframes slide-down {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(0); }
+        }
+
+        .animate-slide-down {
+            animation: slide-down 0.5s ease-out;
+        }
+
+        @keyframes glow {
+            0% { box-shadow: 0 0 5px rgba(255, 255, 255, 0.3); }
+            50% { box-shadow: 0 0 20px rgba(255, 255, 255, 0.5); }
+            100% { box-shadow: 0 0 5px rgba(255, 255, 255, 0.3); }
+        }
+
+        .search-container {
+            position: relative;
+            width: 256px;
+        }
+
+        .search-container::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            background: radial-gradient(
+                circle at var(--mouse-x, center) var(--mouse-y, center),
+                rgba(105, 105, 105, 0.466) 0%,
+                rgba(41, 40, 41, 0.699) 30%,
+                transparent 70%
+            );
+            border-radius: 9999px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .search-container:hover::before,
+        .search-container:focus-within::before {
+            opacity: 1;
+        }
+
+        .search-input {
+            position: relative;
+            z-index: 1;
+            transition: all 0.3s ease;
+        }
+
+        .card-hover {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card-hover:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.5);
+        }
+
+        .card-hover:hover .card-overlay {
+            opacity: 1;
+        }
+
+        .card-overlay {
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            background: linear-gradient(
+                to top,
+                rgba(0, 0, 0, 0.9) 0%,
+                rgba(0, 0, 0, 0.7) 50%,
+                rgba(0, 0, 0, 0.3) 100%
+            );
+        }
+
+        .nav-link {
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 0;
+            background: linear-gradient(to right, #ffffff, #ffffff);
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .glass-effect {
+            background: rgba(17, 24, 39, 0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .modal-animation {
+            animation: modalFade 0.3s ease-out;
+        }
+
+        @keyframes modalFade {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .floating-button {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .search-input {
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            box-shadow: 0 0 15px rgba(20, 20, 20, 0.5);
+            transform: scale(1.02);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        .scroll-top-button {
+            transition: all 0.3s ease;
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .scroll-top-button.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        #githubButton img, #kofiButton img {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+        }
+
+        .card-hover:hover img {
+            filter: blur(3px);
+            transition: filter 0.3s ease;
+        }
+
+        .card-hover img {
+            transition: filter 0.3s ease;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white min-h-screen" x-data="app()">
+    <div id="particles-js" class="fixed inset-0 pointer-events-none z-0"></div>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8455890604619575"
+    crossorigin="anonymous"></script>
+    <!-- navigation -->
+    <nav class="fixed w-full z-50 glass-effect">
+        <div class="container mx-auto px-6 py-3">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-8">
+                    <div class="flex items-center space-x-3">
+                        <img src="logo.png" alt="15M Logo" class="h-8 w-8 md:h-10 md:w-10">
+                        <span class="text-2xl md:text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-gray-200 to-gray-300">By error</span>
+                    </div>
+                    <div class="hidden md:flex space-x-6">
+                        <button @click="currentTab = currentTab === 'movies' ? 'shows' : 'movies'" 
+                                class="nav-link">
+                            <span x-text="currentTab === 'movies' ? 'Switch to TV Shows' : 'Switch to Movies'"></span>
+                        </button>
+                        <button @click="showWatchLater = true" class="nav-link flex items-center space-x-2">
+                            <span>Watch Later</span>
+                            <span x-show="watchLaterCount > 0" 
+                                  class="bg-gray-600 text-white text-xs flex items-center justify-center rounded-full w-6 h-6" 
+                                  x-text="watchLaterCount"></span>
+                        </button>
+                        <a href="" target="_blank" class="nav-link flex items-center">
+                            <span>GitHub</span>
+                        </a>
+                        <a href="" target="_blank" class="nav-link flex items-center">
+                            <span>teste</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="relative">
+                        <div class="search-container hidden md:block">
+                            <input type="text" 
+                                   x-model="searchQuery" 
+                                   @keyup.debounce.300ms="searchContent()"
+                                   placeholder="Search..." 
+                                   class="search-input bg-gray-800 rounded-full px-6 py-2 focus:outline-none focus:ring-2 focus:ring-gray-400 w-64">
+                        </div>
+                    </div>
+                    <!-- mobile menu button -->
+                    <button @click="mobileMenu = !mobileMenu" class="md:hidden text-gray-300 hover:text-white">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- mobile menu -->
+            <div x-show="mobileMenu" 
+                x-transition:enter="transition ease-out duration-200"
+                x-transition:enter-start="opacity-0 transform -translate-y-2"
+                x-transition:enter-end="opacity-100 transform translate-y-0"
+                x-transition:leave="transition ease-in duration-150"
+                x-transition:leave-start="opacity-100 transform translate-y-0"
+                x-transition:leave-end="opacity-0 transform -translate-y-2"
+                class="md:hidden mt-4 pb-4">
+                <div class="flex flex-col space-y-4">
+                    <!-- mobile search -->
+                    <div class="relative">
+                        <input type="text" 
+                               x-model="searchQuery" 
+                               @keyup.debounce.300ms="searchContent()"
+                               placeholder="Search..." 
+                               class="w-full bg-gray-800 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-gray-400">
+                    </div>
+                    <button @click="currentTab = currentTab === 'movies' ? 'shows' : 'movies'; mobileMenu = false" 
+                            class="text-left px-4 py-2 hover:bg-gray-800 rounded-lg transition-colors">
+                        <span x-text="currentTab === 'movies' ? 'Switch to TV Shows' : 'Switch to Movies'"></span>
+                    </button>
+                    <button @click="showWatchLater = true; mobileMenu = false" 
+                            class="flex items-center justify-between px-4 py-2 hover:bg-gray-800 rounded-lg transition-colors">
+                        <span>Watch Later</span>
+                        <span x-show="watchLaterCount > 0" 
+                              class="bg-gray-600 text-white text-xs flex items-center justify-center rounded-full w-6 h-6" 
+                              x-text="watchLaterCount"></span>
+                    </button>
+                    <a href="https://github.com/blouzy-cpp" target="_blank" 
+                       class="px-4 py-2 hover:bg-gray-800 rounded-lg transition-colors">GitHub</a>
+                    <a href="https://ko-fi.com/blouzy" target="_blank" 
+                       class="px-4 py-2 hover:bg-gray-800 rounded-lg transition-colors">Ko-Fi</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- update message 
+    <div class="fixed top-[3.5rem] md:top-16 left-0 right-0 z-40 animate-slide-down"
+         x-data="{ show: true }"
+         x-show="show"
+         x-transition:enter="transition ease-out duration-300"
+         x-transition:enter-start="transform -translate-y-full"
+         x-transition:enter-end="transform translate-y-0"
+         x-transition:leave="transition ease-in duration-200"
+         x-transition:leave-start="transform translate-y-0"
+         x-transition:leave-end="transform -translate-y-full">
+        <div class="bg-gray-900 border-b border-purple-500/20">
+            <div class="container mx-auto px-6 py-2 flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                    <span class="text-purple-400">🎉</span> -->
+                   <!--  <p class="text-sm">
+                        <span class="font-semibold text-purple-400">Update (27/01/25)</span>
+                        <span class="text-gray-300 text-xs sm:text-sm"> Added Flicky (new english provider)</span>
+                    </p>
+                </div>
+                <button @click="show = false" class="text-gray-400 hover:text-white transition-colors">×</button>
+            </div>
+        </div>
+    </div> -->
+
+    <!-- hero section -->
+    <div class="pt-24 pb-12 px-6">
+        <div class="container mx-auto">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
+                <h2 class="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-gray-400 to-gray-600" 
+                    x-text="currentTab === 'movies' ? 'Filmes populares' : 'Tv show'"></h2>
+            </div>
+            
+            <!-- filters -->
+            <div class="mb-8 space-y-4">
+                <div class="flex flex-wrap gap-4 items-center">
+                    <!-- genre filter -->
+                    <div class="relative">
+                        <select x-model="selectedGenre"
+                                @change="filterContent()"
+                                class="bg-gray-800 text-white rounded-lg px-4 py-2 pr-8 appearance-none hover:bg-gray-700 transition-colors duration-300 focus:ring-2 focus:ring-gray-400 focus:outline-none">
+                            <option value="">All Genres</option>
+                            <template x-for="genre in genres" :key="genre.id">
+                                <option :value="genre.id" x-text="genre.name"></option>
+                            </template>
+                        </select>
+                        <div class="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- rating filter -->
+                    <div class="relative">
+                        <select x-model="minRating"
+                                @change="filterContent()"
+                                class="bg-gray-800 text-white rounded-lg px-4 py-2 pr-8 appearance-none hover:bg-gray-700 transition-colors duration-300 focus:ring-2 focus:ring-gray-400 focus:outline-none">
+                            <option value="">Any Rating</option>
+                            <option value="8">8+ ⭐</option>
+                            <option value="7">7+ ⭐</option>
+                            <option value="6">6+ ⭐</option>
+                            <option value="5">5+ ⭐</option>
+                        </select>
+                        <div class="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- active filters display -->
+                    <div class="flex flex-wrap gap-2" x-show="selectedGenre || minRating">
+                        <template x-if="selectedGenre">
+                            <span class="bg-gray-600 text-white px-3 py-1 rounded-full text-sm flex items-center gap-2">
+                                <span x-text="getGenreName(selectedGenre)"></span>
+                                <button @click="selectedGenre = ''; filterContent()" class="hover:text-gray-300">×</button>
+                            </span>
+                        </template>
+                        <template x-if="minRating">
+                            <span class="bg-gray-800 text-white px-3 py-1 rounded-full text-sm flex items-center gap-2">
+                                <span x-text="minRating + '+ ⭐'"></span>
+                                <button @click="minRating = ''; filterContent()" class="hover:text-gray-300">×</button>
+                            </span>
+                        </template>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- content grid -->
+            <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-8">
+                <template x-for="item in filteredContent" :key="item.id">
+                    <div class="relative card-hover">
+                        <a :href="'watch.html?id=' + item.id + '&type=' + (currentTab === 'movies' ? 'movie' : 'tv')"
+                           class="block rounded-lg overflow-hidden bg-gray-800 cursor-pointer">
+                            <div class="relative">
+                                <img :src="'https://image.tmdb.org/t/p/w500' + item.poster_path" 
+                                     :alt="item.title || item.name"
+                                     class="w-full h-48 sm:h-64 md:h-72 lg:h-96 object-cover">
+                                <div class="card-overlay absolute inset-0 flex flex-col justify-end p-3 md:p-4">
+                                    <h3 class="text-sm md:text-lg font-semibold" x-text="item.title || item.name"></h3>
+                                    <p class="text-gray-400 text-xs md:text-sm mt-1" x-text="'⭐ ' + (item.vote_average || 'N/A') + '/10'"></p>
+                                    <p class="text-gray-300 text-xs md:text-sm mt-2 hidden sm:block" x-text="item.overview.substring(0, 100) + '...'"></p>
+                                </div>
+                            </div>
+                        </a>
+                        <button @click.stop="toggleWatchLater(item)"
+                                class="absolute top-2 right-2 p-1.5 md:p-2 bg-gray-900 bg-opacity-75 rounded-full hover:bg-gray-600 transition-all duration-300"
+                                :class="isInWatchLater(item) ? 'text-gray-400' : 'text-white'">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 md:h-5 md:w-5" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2z"/>
+                            </svg>
+                        </button>
+                    </div>
+                </template>
+            </div>
+
+            <!-- pagination -->
+            <div class="mt-12 flex items-center justify-center space-x-4">
+                <button @click="currentPage > 1 && changePage(currentPage - 1)"
+                        :class="currentPage === 1 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-700'"
+                        class="bg-gray-800 px-6 py-3 rounded-lg transition-all duration-300 flex items-center space-x-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+                    </svg>
+                    <span>Previous</span>
+                </button>
+                
+                <span class="text-gray-400">Page <span class="text-white font-medium" x-text="currentPage"></span></span>
+
+                <button @click="changePage(currentPage + 1)"
+                        class="bg-gray-800 hover:bg-gray-700 px-6 py-3 rounded-lg transition-all duration-300 flex items-center space-x-2">
+                    <span>Next</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- streaming services -->
+    <div class="container mx-auto px-4 md:px-6 py-8 md:py-12">
+        <div class="text-center mb-6 md:mb-8">
+            <h2 class="text-xl md:text-2xl font-bold text-gray-300">Content Available From</h2>
+            <p class="text-sm md:text-base text-gray-400 mt-2">15M aggregates content from various premium streaming platforms</p>
+        </div>
+        <div class="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 items-center justify-items-center opacity-80">
+            <a href="https://netflix.com" target="_blank" class="transform transition-transform hover:scale-105">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg" 
+                     alt="Netflix" 
+                     class="h-6 md:h-8 w-auto grayscale hover:grayscale-0 hover:scale-110 hover:brightness-125 transition-all duration-300 transform hover:drop-shadow-[0_0_7px_rgba(229,9,20,0.7)]">
+            </a>
+            <a href="https://www.primevideo.com" target="_blank" class="transform transition-transform hover:scale-105">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/1/11/Amazon_Prime_Video_logo.svg" 
+                     alt="Prime Video" 
+                     class="h-6 md:h-8 w-auto grayscale hover:grayscale-0 hover:scale-110 hover:brightness-125 transition-all duration-300 transform hover:drop-shadow-[0_0_7px_rgba(0,168,225,0.7)]">
+            </a>
+            <a href="https://www.disneyplus.com" target="_blank" class="transform transition-transform hover:scale-105">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/3/3e/Disney%2B_logo.svg" 
+                     alt="Disney+" 
+                     class="h-6 md:h-8 w-auto grayscale hover:grayscale-0 hover:scale-110 hover:brightness-125 transition-all duration-300 transform hover:drop-shadow-[0_0_7px_rgba(113,168,255,0.7)]">
+            </a>
+            <a href="https://www.hulu.com" target="_blank" class="transform transition-transform hover:scale-105">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Hulu_logo_%282018%29.svg/220px-Hulu_logo_%282018%29.svg.png" 
+                     alt="Hulu" 
+                     class="h-6 md:h-8 w-auto grayscale hover:grayscale-0 hover:scale-110 hover:brightness-125 transition-all duration-300 transform hover:drop-shadow-[0_0_7px_rgba(28,231,131,0.7)]">
+            </a>
+            <a href="https://www.max.com" target="_blank" class="transform transition-transform hover:scale-105">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/1/17/HBO_Max_Logo.svg" 
+                     alt="HBO Max" 
+                     class="h-6 md:h-8 w-auto grayscale hover:grayscale-0 hover:scale-110 hover:brightness-125 transition-all duration-300 transform hover:drop-shadow-[0_0_7px_rgba(116,80,254,0.7)]">
+            </a>
+            <a href="https://tv.apple.com" target="_blank" class="transform transition-transform hover:scale-105">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/Apple_TV_Plus_Logo.svg/170px-Apple_TV_Plus_Logo.svg.png" 
+                     alt="Apple TV+" 
+                     class="h-6 md:h-8 w-auto grayscale hover:grayscale-0 hover:scale-110 hover:brightness-125 transition-all duration-300 transform hover:drop-shadow-[0_0_7px_rgba(0,244,244,0.7)]">
+            </a>
+        </div>
+    </div>
+
+    <footer class="text-gray-400 py-4 md:py-6 mt-8 md:mt-12">
+        <div class="container mx-auto px-4 md:px-6 text-center">
+            <p class="text-xs md:text-sm">
+                15M 
+            </p>
+            <p class="mt-2 text-xs">
+                Feito com ❤ by errorxz. 
+            </p>
+            <p class="mt-2 text-xs">
+                <a href="mailto:WIP" class="text-gray-400 hover:text-gray-300 transition-colors">WIP</a>
+            </p>
+        </div>
+    </footer>
+
+    <!-- particles.js -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        particlesJS('particles-js', {
+            particles: {
+                number: {
+                    value: 80,
+                    density: {
+                        enable: true,
+                        value_area: 800
+                    }
+                },
+                color: {
+                    value: '#a855f7'
+                },
+                shape: {
+                    type: 'circle'
+                },
+                opacity: {
+                    value: 0.2,
+                    random: true,
+                    animation: {
+                        enable: true,
+                        speed: 1,
+                        opacity_min: 0.1,
+                        sync: false
+                    }
+                },
+                size: {
+                    value: 3,
+                    random: true,
+                    animation: {
+                        enable: true,
+                        speed: 2,
+                        size_min: 0.1,
+                        sync: false
+                    }
+                },
+                line_linked: {
+                    enable: true,
+                    distance: 150,
+                    color: '#a855f7',
+                    opacity: 0.2,
+                    width: 1
+                },
+                move: {
+                    enable: true,
+                    speed: 1,
+                    direction: 'none',
+                    random: true,
+                    straight: false,
+                    out_mode: 'out',
+                    bounce: false,
+                }
+            },
+            interactivity: {
+                detect_on: 'window',
+                events: {
+                    onhover: {
+                        enable: true,
+                        mode: 'grab'
+                    },
+                    onclick: {
+                        enable: true,
+                        mode: 'push'
+                    },
+                    resize: true
+                },
+                modes: {
+                    grab: {
+                        distance: 140,
+                        line_linked: {
+                            opacity: 0.5
+                        }
+                    },
+                    push: {
+                        particles_nb: 4
+                    }
+                }
+            },
+            retina_detect: true
+        });
+    </script>
+
+    <!-- watch later modal -->
+    <div x-show="showWatchLater" 
+         class="fixed inset-0 z-50 overflow-auto bg-black bg-opacity-90 flex items-start justify-center"
+         @click.away="showWatchLater = false"
+         x-transition:enter="transition ease-out duration-300"
+         x-transition:enter-start="opacity-0"
+         x-transition:enter-end="opacity-100"
+         x-transition:leave="transition ease-in duration-200"
+         x-transition:leave-start="opacity-100"
+         x-transition:leave-end="opacity-0">
+        <div class="bg-gray-900 rounded-lg w-full max-w-4xl mt-20 modal-animation">
+            <div class="p-6 border-b border-gray-800">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-2xl font-bold">Watch Later</h2>
+                    <div class="flex items-center space-x-4">
+                        <button @click="showClearConfirm = true" 
+                                x-show="watchLaterItems.length > 0"
+                                class="text-gray-400 hover:text-red-500 flex items-center space-x-2 transition-colors duration-300">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                            <span>Clear All</span>
+                        </button>
+                        <button @click="showWatchLater = false" class="text-gray-500 hover:text-white">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="p-6">
+                <div x-show="!watchLaterItems.length" class="text-center text-gray-500 py-8">
+                    No items in your watch later list
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                    <template x-for="item in watchLaterItems" :key="item.id">
+                        <div class="relative bg-gray-800 rounded-lg overflow-hidden">
+                            <a :href="'watch.html?id=' + item.id + '&type=' + item.type"
+                               class="block">
+                                <img :src="'https://image.tmdb.org/t/p/w500' + item.poster_path" 
+                                     :alt="item.title || item.name"
+                                     class="w-full h-48 object-cover">
+                                <div class="p-4">
+                                    <h3 class="font-medium" x-text="item.title || item.name"></h3>
+                                    <p class="text-gray-400 text-sm mt-1" x-text="'⭐ ' + (item.vote_average || 'N/A') + '/10'"></p>
+                                </div>
+                            </a>
+                            <button @click="toggleWatchLater(item)"
+                                    class="absolute top-2 right-2 p-2 bg-gray-900 bg-opacity-75 rounded-full hover:bg-gray-600 transition-all duration-300 text-gray-400">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2z"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- clear confirmation modal -->
+    <div x-show="showClearConfirm" 
+         class="fixed inset-0 z-[60] overflow-auto bg-black bg-opacity-90 flex items-center justify-center"
+         @click.away="showClearConfirm = false"
+         x-transition:enter="transition ease-out duration-300"
+         x-transition:enter-start="opacity-0 transform scale-95"
+         x-transition:enter-end="opacity-100 transform scale-100"
+         x-transition:leave="transition ease-in duration-200"
+         x-transition:leave-start="opacity-100 transform scale-100"
+         x-transition:leave-end="opacity-0 transform scale-95">
+        <div class="bg-gray-900 rounded-lg w-full max-w-md p-6 modal-animation">
+            <div class="text-center">
+                <div class="w-16 h-16 rounded-full bg-red-500 bg-opacity-10 mx-auto flex items-center justify-center mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold mb-2">Clear Watch Later List?</h3>
+                <p class="text-gray-400 mb-6">This action cannot be undone. Are you sure you want to remove all items from your watch later list?</p>
+                <div class="flex space-x-3 justify-center">
+                    <button @click="showClearConfirm = false" 
+                            class="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg transition-colors duration-300">
+                        Cancel
+                    </button>
+                    <button @click="doClearWatchLater()" 
+                            class="px-4 py-2 bg-red-600 hover:bg-red-700 rounded-lg transition-colors duration-300">
+                        Clear All
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+       /* document.addEventListener('DOMContentLoaded', function() {
+            const discordPopupSeen = localStorage.getItem('discordPopupSeen');
+
+            if (!discordPopupSeen) {
+                const popup = document.createElement('div');
+                popup.className = 'fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75';
+                popup.innerHTML = `
+                    <div class="bg-gray-800 rounded-lg p-6 text-center space-y-4 max-w-sm">
+                        <h2 class="text-xl font-bold text-purple-400">15M has a Discord Server!</h2>
+                        <p class="text-gray-300">Join the community for updates and discussions <3</p>
+                        <a href="https://discord.gg/leaks15m" target="_blank" 
+                            class="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-lg text-white inline-block">
+                            Join Now
+                        </a>
+                        <button id="closePopup" 
+                            class="text-gray-500 hover:text-gray-300 focus:outline-none">
+                            Dismiss
+                        </button>
+                    </div>
+                `;
+                document.body.appendChild(popup);
+
+                document.getElementById('closePopup').addEventListener('click', function() {
+                    popup.style.display = 'none';
+                    localStorage.setItem('discordPopupSeen', 'true');
+                });
+            }
+        }); */
+
+        function app() {
+            return {
+                apiKey: '1070730380f5fee0d87cf0382670b255',
+                content: [],
+                currentTab: 'movies',
+                language: 'en',
+                searchQuery: '',
+                currentPage: 1,
+                showWatchLater: false,
+                watchLaterItems: [],
+                watchLaterCount: 0,
+                showModal: false,
+                selectedContent: null,
+                currentVideoUrl: '',
+                selectedSeason: 1,
+                selectedEpisode: 1,
+                seasons: [],
+                episodes: [],
+                selectedSource: 'multiembed',
+                availableSources: availableSources,
+                showClearConfirm: false,
+                genres: [],
+                selectedGenre: '',
+                minRating: '',
+                filteredContent: [],
+                mobileMenu: false,
+
+                async init() {
+                    const savedItems = localStorage.getItem('watchLater');
+                    if (savedItems) {
+                        this.watchLaterItems = JSON.parse(savedItems);
+                        this.watchLaterCount = this.watchLaterItems.length;
+                    }
+
+                    await this.fetchGenres();
+                    await this.fetchContent();
+                    
+                    this.$watch('currentTab', async () => {
+                        this.currentPage = 1;
+                        this.selectedGenre = '';
+                        this.minRating = '';
+                        await this.fetchGenres();
+                        await this.fetchContent();
+                    });
+                    
+                    this.$watch('language', () => {
+                        this.currentPage = 1;
+                        this.fetchContent();
+                    });
+                },
+
+                async fetchGenres() {
+                    const baseUrl = 'https://api.themoviedb.org/3';
+                    const endpoint = this.currentTab === 'movies' ? 'genre/movie/list' : 'genre/tv/list';
+                    const url = `${baseUrl}/${endpoint}?api_key=${this.apiKey}&language=${this.language}`;
+
+                    try {
+                        const response = await fetch(url);
+                        const data = await response.json();
+                        this.genres = data.genres;
+                    } catch (error) {
+                        console.error('Error fetching genres:', error);
+                    }
+                },
+
+                getGenreName(genreId) {
+                    const genre = this.genres.find(g => g.id === parseInt(genreId));
+                    return genre ? genre.name : '';
+                },
+
+                filterContent() {
+                    this.filteredContent = this.content.filter(item => {
+                        if (this.selectedGenre && !item.genre_ids.includes(parseInt(this.selectedGenre))) {
+                            return false;
+                        }
+                        
+                        if (this.minRating && item.vote_average < parseFloat(this.minRating)) {
+                            return false;
+                        }
+                        
+                        return true;
+                    });
+                },
+
+                async fetchContent() {
+                    const baseUrl = 'https://api.themoviedb.org/3';
+                    const endpoint = this.currentTab === 'movies' ? 'movie/popular' : 'tv/popular';
+                    const url = `${baseUrl}/${endpoint}?api_key=${this.apiKey}&language=${this.language}-${this.language.toUpperCase()}&page=${this.currentPage}`;
+
+                    try {
+                        const response = await fetch(url);
+                        const data = await response.json();
+                        this.content = data.results;
+                        this.filterContent();
+                    } catch (error) {
+                        console.error('Error fetching content:', error);
+                    }
+                },
+
+                async searchContent() {
+                    if (!this.searchQuery) {
+                        await this.fetchContent();
+                        return;
+                    }
+
+                    const baseUrl = 'https://api.themoviedb.org/3/search';
+                    const endpoint = this.currentTab === 'movies' ? 'movie' : 'tv';
+                    const url = `${baseUrl}/${endpoint}?api_key=${this.apiKey}&query=${encodeURIComponent(this.searchQuery)}&language=${this.language}-${this.language.toUpperCase()}&page=${this.currentPage}`;
+
+                    try {
+                        const response = await fetch(url);
+                        const data = await response.json();
+                        this.content = data.results;
+                        this.filterContent();
+                    } catch (error) {
+                        console.error('Error searching content:', error);
+                    }
+                },
+
+                async openContent(item) {
+                    this.selectedContent = item;
+                    this.showModal = true;
+
+                    if (this.currentTab === 'shows') {
+                        const url = `https://api.themoviedb.org/3/tv/${item.id}?api_key=${this.apiKey}`;
+                        try {
+                            const response = await fetch(url);
+                            const data = await response.json();
+                            this.seasons = Array.from({length: data.number_of_seasons}, (_, i) => i + 1);
+                            this.updateEpisodes();
+                        } catch (error) {
+                            console.error('Error fetching seasons:', error);
+                        }
+                    }
+                    this.updateVideoUrl();
+                },
+
+                getSourceUrl(sourceId, type, params) {
+                    const source = this.availableSources.find(s => s.id === sourceId);
+                    if (!source) return '';
+
+                    let url = source.urls[type];
+                    Object.entries(params).forEach(([key, value]) => {
+                        url = url.replace(`{${key}}`, value);
+                    });
+                    return url;
+                },
+
+                updateVideoUrl() {
+                    const source = this.availableSources.find(s => s.id === this.selectedSource);
+                    if (!source) return '';
+
+                    const params = this.currentTab === 'shows'
+                        ? { id: this.selectedContent.id, season: this.selectedSeason, episode: this.selectedEpisode }
+                        : { id: this.selectedContent.id };
+
+                    this.currentVideoUrl = this.getSourceUrl(
+                        this.selectedSource,
+                        this.currentTab === 'shows' ? 'tv' : 'movie',
+                        params
+                    );
+                },
+
+                async updateEpisodes() {
+                    const url = `https://api.themoviedb.org/3/tv/${this.selectedContent.id}/season/${this.selectedSeason}?api_key=${this.apiKey}`;
+                    try {
+                        const response = await fetch(url);
+                        const data = await response.json();
+                        this.episodes = Array.from({length: data.episodes.length}, (_, i) => i + 1);
+                        this.selectedEpisode = 1;
+                    } catch (error) {
+                        console.error('Error fetching episodes:', error);
+                    }
+                },
+
+                loadEpisode() {
+                    this.updateVideoUrl();
+                },
+
+                async changePage(page) {
+                    this.currentPage = page;
+                    if (this.searchQuery) {
+                        await this.searchContent();
+                    } else {
+                        await this.fetchContent();
+                    }
+                },
+
+                toggleWatchLater(item) {
+                    const index = this.watchLaterItems.findIndex(i => i.id === item.id);
+                    if (index === -1) {
+                        this.watchLaterItems.push({
+                            ...item,
+                            type: this.currentTab === 'movies' ? 'movie' : 'tv'
+                        });
+                    } else {
+                        this.watchLaterItems.splice(index, 1);
+                    }
+                    this.watchLaterCount = this.watchLaterItems.length;
+                    localStorage.setItem('watchLater', JSON.stringify(this.watchLaterItems));
+                },
+
+                isInWatchLater(item) {
+                    return this.watchLaterItems.some(i => i.id === item.id);
+                },
+
+                clearWatchLater() {
+                    this.showClearConfirm = true;
+                },
+
+                doClearWatchLater() {
+                    this.watchLaterItems = [];
+                    this.watchLaterCount = 0;
+                    localStorage.setItem('watchLater', JSON.stringify([]));
+                    this.showClearConfirm = false;
+                }
+            }
+        }
+    </script>
+    <button 
+        @click="window.scrollTo({top: 0})" 
+        @scroll.window="showScrollTop = window.pageYOffset > 500"
+        x-data="{ showScrollTop: false }"
+        x-show="showScrollTop"
+        x-transition:enter="transition ease-out duration-300"
+        x-transition:enter-start="opacity-0 transform translate-y-10"
+        x-transition:enter-end="opacity-100 transform translate-y-0"
+        x-transition:leave="transition ease-in duration-300"
+        x-transition:leave-start="opacity-100 transform translate-y-0"
+        x-transition:leave-end="opacity-0 transform translate-y-10"
+        class="fixed bottom-8 right-8 bg-gray-600 hover:bg-gray-700 text-white rounded-full p-4 shadow-lg cursor-pointer transition-all duration-300 hover:scale-110 z-50">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+        </svg>
+    </button>
+    <div id="donationBanner" class="fixed bottom-4 left-4 right-4 md:bottom-2 md:right-auto md:left-2 bg-red-400 text-white text-sm md:text-base p-2 md:p-3 rounded-lg shadow-lg flex items-center justify-between space-x-2 md:space-x-4 z-50">
+        <span>Gostou do site? Apoie-me em <a href="discord.gg/leaks15m" target="_blank" class="underline hover:text-gray-300 transition-all">Discord</a> <3</span>
+        <button id="closeBanner" class="text-white hover:text-gray-300 transition-all">
+            &times;
+        </button>
+    </div>
+    <script>
+        const closeBannerButton = document.getElementById('closeBanner');
+        if (closeBannerButton) {
+            closeBannerButton.addEventListener('click', function() {
+                const banner = document.getElementById('donationBanner');
+                if (banner) {
+                    banner.style.display = 'none';
+                }
+            });
+        }
+    </script>
+    <script>
+        document.querySelector('.search-container input').addEventListener('mousemove', (e) => {
+            const container = e.target.parentElement;
+            const rect = container.getBoundingClientRect();
+            const x = ((e.clientX - rect.left) * 100) / rect.width;
+            const y = ((e.clientY - rect.top) * 100) / rect.height;
+            container.style.setProperty('--mouse-x', x + '%');
+            container.style.setProperty('--mouse-y', y + '%');
+        });
+    </script>
+    
+</body>
+</html>

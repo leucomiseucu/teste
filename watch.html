@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>errorxz</title>
+    <meta content="errorxz" property="og:title"/>
+    <meta content="Clique, assista, aproveite. O 15M derruba o paywall, garantindo que conteúdo de qualidade seja acessível a todos." property="og:description"/>
+    <meta content="" property="og:url"/>
+    <meta content="coloque o logo aqui" property="og:image"/>
+    <meta content="#A17FC0" data-react-helmet="true" name="theme-color"/>
+    <meta property="twitter:card" content="summary">
+    <meta property="twitter:url" content="">
+    <meta property="twitter:title" content="Assista a Filmes e Séries">
+    <meta property="twitter:description" content="Clique, assista, aproveite. O 15M derruba o paywall, garantindo que conteúdo de qualidade seja acessível a todos.">
+    <meta property="twitter:image" content="">
+    <link rel="icon" type="image/x-icon" href="">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.10.3/cdn.min.js" defer></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="sources.js"></script>
+</head>
+<body class="bg-gray-900 text-white min-h-screen" x-data="app()">
+    <nav class="fixed w-full z-50 glass-effect">
+        <div class="container mx-auto px-6 py-3">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-8">
+                    <div class="flex items-center space-x-3">
+                        <img src="logo.png" alt="15M Logo" class="h-8 w-8 md:h-10 md:w-10">
+                        <span class="text-2xl md:text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-gray-200 to-gray-300">15M</span>
+                    </div>
+                    <div class="hidden md:flex space-x-6">
+                        <button @click="currentTab = currentTab === 'movies' ? 'shows' : 'movies'" class="nav-link">
+                            <span x-text="currentTab === 'movies' ? 'Mudar para Séries de TV' : 'Mudar para Filmes'"></span>
+                        </button>
+                        <button @click="showWatchLater = true" class="nav-link flex items-center space-x-2">
+                            <span>Assistir Depois</span>
+                            <span x-show="watchLaterCount > 0" class="bg-gray-600 text-white text-xs flex items-center justify-center rounded-full w-6 h-6" x-text="watchLaterCount"></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <footer class="text-gray-400 py-4 md:py-6 mt-8 md:mt-12">
+        <div class="container mx-auto px-4 md:px-6 text-center">
+            <p class="text-xs md:text-sm">15M no topo</p>
+            <p class="mt-2 text-xs">Feito com ❤ por errorxz.</p>
+        </div>
+    </footer>
+</body>
+</html>
